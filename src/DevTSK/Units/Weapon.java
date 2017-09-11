@@ -1,13 +1,18 @@
 package DevTSK.Units;
 
 public class Weapon {
-	private final int rng, atk, crit, type;
-	private final double hit;
-	private final String efns, name;
+	public final int rng, atk, crit, type;
+	public final double hit;
+	public final String efns, name;
 	public static final int SWORD = 0,
 			AX = 1,
 			SPEAR = 2,
-			BOW = 3;
+			BOW = 3,
+			ANIMA = 4,
+			DARK = 5,
+			LIGHT = 6,
+			ENERGY = 7,
+			DIVINE = 8;
 
 	public final boolean isMagic, isReaver;
 

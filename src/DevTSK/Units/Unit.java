@@ -56,6 +56,30 @@ public class Unit {
 		case 0:
 			return level;
 		case 1:
+			return atk + c.getBaseStat(statNumber);
+		case 2:
+			return def + c.getBaseStat(statNumber);
+		case 3:
+			return res + c.getBaseStat(statNumber);
+		case 4:
+			return spd + c.getBaseStat(statNumber);
+		case 5:
+			return skl + c.getBaseStat(statNumber);
+		case 6:
+			return luck + c.getBaseStat(statNumber);
+		case 7:
+			return mov + c.getBaseStat(statNumber);
+		case 8:
+			return hp;
+		}
+		return 0;
+	}
+
+	public int getRawStat(int statNumber) {
+		switch (statNumber) {
+		case 0:
+			return level;
+		case 1:
 			return atk;
 		case 2:
 			return def;
@@ -85,5 +109,9 @@ public class Unit {
 
 	public String getNom() {
 		return nom;
+	}
+
+	public Xlass getXlass() {
+		return c;
 	}
 }
