@@ -56,21 +56,21 @@ public class Unit {
 		case 0:
 			return level;
 		case 1:
-			return atk + c.getBaseStat(statNumber);
+			return atk + c.getBaseStat(Xlass.ATTACK);
 		case 2:
-			return def + c.getBaseStat(statNumber);
+			return def + c.getBaseStat(Xlass.DEFENSE);
 		case 3:
-			return res + c.getBaseStat(statNumber);
+			return res + c.getBaseStat(Xlass.RESISTANCE);
 		case 4:
-			return spd + c.getBaseStat(statNumber);
+			return spd + c.getBaseStat(Xlass.SPEED);
 		case 5:
-			return skl + c.getBaseStat(statNumber);
+			return skl + c.getBaseStat(Xlass.SKILL);
 		case 6:
-			return luck + c.getBaseStat(statNumber);
+			return luck + c.getBaseStat(Xlass.LUCK);
 		case 7:
-			return mov + c.getBaseStat(statNumber);
+			return mov + c.getBaseStat(Xlass.MOVEMENT);
 		case 8:
-			return hp;
+			return hp + c.getBaseStat(Xlass.HP);
 		}
 		return 0;
 	}
@@ -113,5 +113,9 @@ public class Unit {
 
 	public Xlass getXlass() {
 		return c;
+	}
+
+	public boolean canUseWeapon() {
+		return c.canUseWeapon(w);
 	}
 }

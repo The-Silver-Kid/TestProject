@@ -6,6 +6,7 @@ public class Battle {
 	private Unit[] a, e;
 	private boolean[] aa, ea;
 	private int[] ac, ec;
+	private boolean adead, edead;
 
 	public Battle(Unit[] allies, Unit[] opponents) {
 		a = allies;
@@ -25,7 +26,9 @@ public class Battle {
 	}
 
 	public void doBattle(int ally, int opponent, boolean allyAttack) {
-		boolean ad = false, ed = false;
+		adead = false;
+		edead = false;
+		boolean ad = false, ed = false, aw = a[ally].canUseWeapon(), ew = e[opponent].canUseWeapon();
 
 		int ahit = 0, ehit = 0, aev = 0, eev = 0;
 
@@ -37,14 +40,25 @@ public class Battle {
 		if (es + 5 < as)
 			ad = true;
 
-		if (ad) {
-			odmg = (a[ally].getStat(Unit.ATTACK) + a[ally].getWeapon().atk) - e[opponent].getStat(Unit.DEFENSE);
-		}
-		if (ed) {
-			odmg = (e[opponent].getStat(Unit.ATTACK) + e[opponent].getWeapon().atk) - a[ally].getStat(Unit.DEFENSE);
-		}
-		edmg = (e[opponent].getStat(Unit.ATTACK) + e[opponent].getWeapon().atk) - a[ally].getStat(Unit.DEFENSE);
-		admg = (a[ally].getStat(Unit.ATTACK) + a[ally].getWeapon().atk) - e[opponent].getStat(Unit.DEFENSE);
+		if (ad)
+			if (aw)
+				odmg = (a[ally].getStat(Unit.ATTACK) + a[ally].getWeapon().atk) - e[opponent].getStat(Unit.DEFENSE);
+			else
+				odmg = (a[ally].getRawStat(Unit.ATTACK) + a[ally].getWeapon().atk) - e[opponent].getStat(Unit.DEFENSE);
+
+		if (ed)
+			if (ew)
+				odmg = (e[opponent].getStat(Unit.ATTACK) + e[opponent].getWeapon().atk) - a[ally].getStat(Unit.DEFENSE);
+			else
+				odmg = (e[opponent].getRawStat(Unit.ATTACK) + e[opponent].getWeapon().atk) - a[ally].getStat(Unit.DEFENSE);
+		if (ew)
+			edmg = (e[opponent].getStat(Unit.ATTACK) + e[opponent].getWeapon().atk) - a[ally].getStat(Unit.DEFENSE);
+		else
+			edmg = (e[opponent].getRawStat(Unit.ATTACK) + e[opponent].getWeapon().atk) - a[ally].getStat(Unit.DEFENSE);
+		if (aw)
+			admg = (a[ally].getStat(Unit.ATTACK) + a[ally].getWeapon().atk) - e[opponent].getStat(Unit.DEFENSE);
+		else
+			admg = (a[ally].getRawStat(Unit.ATTACK) + a[ally].getWeapon().atk) - e[opponent].getStat(Unit.DEFENSE);
 
 		if (odmg < 0)
 			odmg = 0;
@@ -82,50 +96,75 @@ public class Battle {
 		System.out.println(a[ally].getNom() + " has a " + (ahit - eev) + "% chance of landing an attack with " + a[ally].getWeapon().name + ".");
 		System.out.println(e[opponent].getNom() + " has a " + (ehit - aev) + "% chance of landing an attack with " + e[opponent].getWeapon().name + ".");
 
+		System.out.println(a[ally].getXlass().getName() + " " + a[ally].getNom() + " has " + ac[ally] + " HP.\n" + e[opponent].getXlass().getName() + " " + e[opponent].getNom() + " has " + ec[opponent] + " HP.");
+
 		Random r = new Random();
 
-		//boolean ah = true, eh = true, oh = true;
-
 		if (allyAttack) {
-			if (r.nextInt(100) < (ahit - eev))
+			if (r.nextInt(100) < (ahit - eev)) {
+				ec[opponent] -= admg;
 				System.out.println(a[ally].getNom() + " hits!");
-			else
+			} else
 				System.out.println(a[ally].getNom() + " misssed!");
-			if (r.nextInt(100) < (ehit - aev))
-				System.out.println(e[opponent].getNom() + " hits!");
-			else
-				System.out.println(e[opponent].getNom() + " misssed!");
-			if (ad)
-				if (r.nextInt(100) < (ahit - eev))
-					System.out.println(a[ally].getNom() + " hits again!");
-				else
-					System.out.println(a[ally].getNom() + " misssed!");
-			if (ed)
-				if (r.nextInt(100) < (ehit - aev))
-					System.out.println(e[opponent].getNom() + " hits again!");
-				else
+			deathCheck(ally, opponent);
+			if (!edead)
+				if (r.nextInt(100) < (ehit - aev)) {
+					ac[ally] -= edmg;
+					System.out.println(e[opponent].getNom() + " hits!");
+				} else
 					System.out.println(e[opponent].getNom() + " misssed!");
 
 		} else {
-			if (r.nextInt(100) < (ehit - aev))
+			if (r.nextInt(100) < (ehit - aev)) {
+				ac[ally] -= edmg;
 				System.out.println(e[opponent].getNom() + " hits!");
-			else
+			} else
 				System.out.println(e[opponent].getNom() + " misssed!");
-			if (r.nextInt(100) < (ahit - eev))
-				System.out.println(a[ally].getNom() + " hits!");
-			else
-				System.out.println(a[ally].getNom() + " misssed!");
+			deathCheck(ally, opponent);
+			if (!adead)
+				if (r.nextInt(100) < (ahit - eev)) {
+					ec[opponent] -= admg;
+					System.out.println(a[ally].getNom() + " hits!");
+				} else
+					System.out.println(a[ally].getNom() + " misssed!");
+
+		}
+		deathCheck(ally, opponent);
+		if (!edead && !adead) {
 			if (ad)
-				if (r.nextInt(100) < (ahit - eev))
+				if (r.nextInt(100) < (ahit - eev)) {
+					ec[opponent] -= odmg;
 					System.out.println(a[ally].getNom() + " hits again!");
-				else
+				} else
 					System.out.println(a[ally].getNom() + " misssed!");
 			if (ed)
-				if (r.nextInt(100) < (ehit - aev))
+				if (r.nextInt(100) < (ehit - aev)) {
+					ac[ally] -= odmg;
 					System.out.println(e[opponent].getNom() + " hits again!");
-				else
+				} else
 					System.out.println(e[opponent].getNom() + " misssed!");
+			deathCheck(ally, opponent);
+		}
+		//doLooseCheck();
+		if (!edead && !adead)
+			System.out.println(a[ally].getXlass().getName() + " " + a[ally].getNom() + " has " + ac[ally] + " HP left.\n" + e[opponent].getXlass().getName() + " " + e[opponent].getNom() + " has " + ec[opponent] + " HP left.");
+		if (edead && !adead)
+			System.out.println(a[ally].getXlass().getName() + " " + a[ally].getNom() + " has " + ac[ally] + " HP left.\n" + e[opponent].getXlass().getName() + " " + e[opponent].getNom() + " is dead.");
+		if (!edead && adead)
+			System.out.println(a[ally].getXlass().getName() + " " + a[ally].getNom() + " is dead.\n" + e[opponent].getXlass().getName() + " " + e[opponent].getNom() + " has " + ec[opponent] + " HP left.");
 
+	}
+
+	private void deathCheck(int ally, int opponent) {
+		if (ac[ally] < 1) {
+			ac[ally] = 0;
+			aa[ally] = false;
+			adead = true;
+		}
+		if (ec[opponent] < 1) {
+			ec[opponent] = 0;
+			ea[opponent] = false;
+			edead = true;
 		}
 	}
 }

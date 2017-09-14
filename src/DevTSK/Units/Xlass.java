@@ -24,11 +24,6 @@ public class Xlass {
 		return bSt[stat];
 	}
 
-	public boolean canUse(Weapon w) {
-		//TODO : Handle this
-		return true;
-	}
-
 	public double getGrowthRate(int stat) {
 		return sG[stat];
 	}
