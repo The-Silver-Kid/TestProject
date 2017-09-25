@@ -4,23 +4,18 @@ import java.util.Random;
 
 public class Battle {
 	private Unit[] a, e;
-	private boolean[] aa, ea;
 	private int[] ac, ec;
 	private boolean adead, edead;
 
 	public Battle(Unit[] allies, Unit[] opponents) {
 		a = allies;
 		e = opponents;
-		aa = new boolean[a.length];
-		ea = new boolean[e.length];
 		ac = new int[a.length];
 		ec = new int[e.length];
 		for (int i = 0; i < a.length; i++) {
-			aa[i] = true;
 			ac[i] = a[i].getStat(Unit.HP);
 		}
 		for (int i = 0; i < e.length; i++) {
-			ea[i] = true;
 			ec[i] = e[i].getStat(Unit.HP);
 		}
 	}
@@ -158,12 +153,12 @@ public class Battle {
 	private void deathCheck(int ally, int opponent) {
 		if (ac[ally] < 1) {
 			ac[ally] = 0;
-			aa[ally] = false;
+			a[ally].deathToggle();
 			adead = true;
 		}
 		if (ec[opponent] < 1) {
 			ec[opponent] = 0;
-			ea[opponent] = false;
+			e[opponent].deathToggle();
 			edead = true;
 		}
 	}

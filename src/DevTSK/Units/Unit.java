@@ -5,8 +5,10 @@ public class Unit {
 	private Weapon w;
 	private Xlass c;
 	private final String nom;
+	private boolean dead = false;
 	public int[] statUp = new int[7];
 	public final boolean isCommander;
+	private final String deathState;
 
 	public static final int LEVEL = 0, ATTACK = 1, DEFENSE = 2, RESISTANCE = 3, SPEED = 4, SKILL = 5, LUCK = 6, MOVEMENT = 7, HP = 8;
 
@@ -15,6 +17,7 @@ public class Unit {
 		c = clas;
 		nom = name;
 		this.isCommander = isCommander;
+		deathState = "";
 	}
 
 	public Unit(String name, Xlass clas, Weapon wep, boolean isCommander, int[] statGains) {
@@ -31,6 +34,32 @@ public class Unit {
 		mov = statGains[7];
 		hp = statGains[8];
 		this.isCommander = isCommander;
+		deathState = "";
+	}
+
+	public Unit(String name, Xlass clas, Weapon wep, boolean isCommander, String death) {
+		w = wep;
+		c = clas;
+		nom = name;
+		this.isCommander = isCommander;
+		deathState = death;
+	}
+
+	public Unit(String name, Xlass clas, Weapon wep, boolean isCommander, int[] statGains, String death) {
+		w = wep;
+		c = clas;
+		nom = name;
+		level = statGains[0];
+		atk = statGains[1];
+		def = statGains[2];
+		res = statGains[3];
+		spd = statGains[4];
+		skl = statGains[5];
+		luck = statGains[6];
+		mov = statGains[7];
+		hp = statGains[8];
+		this.isCommander = isCommander;
+		deathState = death;
 	}
 
 	public void doLevel() {
@@ -39,6 +68,16 @@ public class Unit {
 
 	public void doClass() {
 		//TODO : Handle this
+	}
+
+	public void deathToggle() {
+		if (!dead)
+			System.out.println(deathState);
+		dead = !dead;
+	}
+
+	public boolean isDead() {
+		return dead;
 	}
 
 	public void doLevel(int time) {
