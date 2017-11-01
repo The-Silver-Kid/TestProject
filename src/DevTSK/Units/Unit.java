@@ -1,5 +1,7 @@
 package DevTSK.Units;
 
+import java.util.Random;
+
 public class Unit {
 	private int hp = 0, atk = 0, def = 0, res = 0, spd = 0, skl = 0, luck = 0, mov = 0, level = 0;
 	private Weapon w;
@@ -7,20 +9,23 @@ public class Unit {
 	private final String nom;
 	private boolean dead = false;
 	public int[] statUp = new int[7];
+	private int[] isType;
 	public final boolean isCommander;
 	private final String deathState;
 
 	public static final int LEVEL = 0, ATTACK = 1, DEFENSE = 2, RESISTANCE = 3, SPEED = 4, SKILL = 5, LUCK = 6, MOVEMENT = 7, HP = 8;
+	public static final int ARMOURED = 0, FLYER = 1, INFANTRY = 2, DRAGON = 3, MOUNTED = 4;
 
-	public Unit(String name, Xlass clas, Weapon wep, boolean isCommander) {
+	public Unit(String name, Xlass clas, Weapon wep, boolean isCommander, int[] types) {
 		w = wep;
 		c = clas;
 		nom = name;
 		this.isCommander = isCommander;
 		deathState = "";
+		isType = types;
 	}
 
-	public Unit(String name, Xlass clas, Weapon wep, boolean isCommander, int[] statGains) {
+	public Unit(String name, Xlass clas, Weapon wep, boolean isCommander, int[] statGains, int[] types) {
 		w = wep;
 		c = clas;
 		nom = name;
@@ -35,6 +40,7 @@ public class Unit {
 		hp = statGains[8];
 		this.isCommander = isCommander;
 		deathState = "";
+		isType = types;
 	}
 
 	public Unit(String name, Xlass clas, Weapon wep, boolean isCommander, String death) {
@@ -63,7 +69,29 @@ public class Unit {
 	}
 
 	public void doLevel() {
-		//TODO : Handle this
+		level++;
+		hp += getUp(Xlass.HP);
+		atk += getUp(Xlass.ATTACK);
+		def += getUp(Xlass.DEFENSE);
+		res += getUp(Xlass.RESISTANCE);
+		spd += getUp(Xlass.SPEED);
+		skl += getUp(Xlass.SKILL);
+		luck += getUp(Xlass.LUCK);
+		//TODO use statUp
+	}
+
+	private int getUp(int stat) {
+		//TODO HANDLE INDIVIDUAL GROWTH RATES
+		int chance = (int) (100 * c.getGrowthRate(stat)), ret = 0;
+		if (chance > 100)
+			do {
+				chance -= 100;
+				ret++;
+			} while (chance > 100);
+		Random r = new Random();
+		if (r.nextInt(100) < (chance - 1))
+			ret++;
+		return ret;
 	}
 
 	public void doClass() {
@@ -156,5 +184,9 @@ public class Unit {
 
 	public boolean canUseWeapon() {
 		return c.canUseWeapon(w);
+	}
+
+	public int[] getType() {
+		return isType;
 	}
 }
