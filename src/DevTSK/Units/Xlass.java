@@ -7,7 +7,7 @@ public class Xlass {
 	private String xup;
 	private int lvl;
 
-	public static final int HP = 0, ATTACK = 1, DEFENSE = 2, SKILL = 3, SPEED = 4, LUCK = 5, RESISTANCE = 6, MOVEMENT = 7;
+	public static final int HP = 0, ATTACK = 1, DEFENSE = 2, SKILL = 3, SPEED = 4, LUCK = 5, RESISTANCE = 6, MOVEMENT = 7, MAGIC = 8;
 
 	public Xlass(String name, int[] baseStats, int[] useableWeapons, double[] statGains) {
 		this.name = name;
